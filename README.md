@@ -1,59 +1,350 @@
-# Linux-Admin-Practicals
-Certainly! Here's the content formatted as a `README.md` file for GitHub:
 
-```markdown
-# Configure SSH Server for Password Authentication on RHEL 6
+# Practical 02
+# Aim: Working with Users, Groups, and Permissions
 
-To configure SSH server on a remote server running RHEL 6 to allow password authentication, follow these steps:
-
-1. **Install SSH Server**:
-   If SSH server is not already installed, you can install it using the following command:
+1. **Adding a User:**
    ```bash
-   sudo yum install openssh-server
+   sudo useradd john
    ```
 
-2. **Enable SSH Service**:
-   Start and enable the SSH service so that it starts automatically upon system boot:
+2. **Setting a Password:**
    ```bash
-   sudo service sshd start
-   sudo chkconfig sshd on
+   sudo passwd john
    ```
 
-3. **Edit SSH Configuration File**:
-   Open the SSH configuration file `/etc/ssh/sshd_config` in a text editor such as `vi` or `nano`:
+3. **Changing User Details (e.g., changing home directory):**
    ```bash
-   sudo vi /etc/ssh/sshd_config
+   sudo usermod -d /new/home/directory john
    ```
 
-4. **Allow Password Authentication**:
-   Find the line that begins with `PasswordAuthentication` and make sure it is set to `yes`. If it's commented out (with a `#`), remove the `#`:
+4. **Deleting a User:**
    ```bash
-   PasswordAuthentication yes
+   sudo userdel john
    ```
 
-5. **Save and Close the File**:
-   After making the changes, save and close the file.
-
-6. **Restart SSH Service**:
-   Restart the SSH service for the changes to take effect:
+5. **Adding a Group:**
    ```bash
-   sudo service sshd restart
+   sudo groupadd developers
    ```
 
-7. **Firewall Configuration (if applicable)**:
-   If you're using a firewall such as iptables or firewalld, make sure to allow SSH traffic (port 22) through the firewall:
-   - For iptables:
-     ```bash
-     sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-     sudo service iptables save
-     ```
-   - For firewalld:
-     ```bash
-     sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
-     sudo firewall-cmd --reload
-     ```
+6. **Adding a User to a Group:**
+   ```bash
+   sudo usermod -aG developers john
+   ```
 
-Once you've completed these steps, your SSH server should be configured to allow password authentication. You can now use an SSH client to connect to the server using the server's IP address or hostname, along with the username and password.
+7. **Changing Group Ownership:**
+   ```bash
+   sudo chgrp developers file_or_directory
+   ```
+
+8. **Changing File Permissions:**
+   ```bash
+   sudo chmod 644 file.txt
+   ```
+
+9. **Viewing File Permissions:**
+   ```bash
+   ls -l file.txt
+   ```
+   
+
+
+
+
+
+
+
+
+
+
+# Practical 03
+# Aim: Initial settings: 
+
+1. **Add a User:**
+   ```bash
+   sudo useradd zoro
+   ```
+
+2. **Network Settings - Change to Static IP Address:**
+   ```bash
+   sudo nmcli connection modify eth0 ipv4.method manual ipv4.addresses 192.168.1.100/24 ipv4.gateway 192.168.1.1 ipv4.dns 8.8.8.8
+   ```
+
+3. **Disable IPv6 if not needed:**
+   Edit the `/etc/sysctl.conf` file and add the following lines:
+   ```bash
+   sudo nano /etc/sysctl.conf
+   net.ipv6.conf.all.disable_ipv6 = 1
+   net.ipv6.conf.default.disable_ipv6 = 1
+   sudo sysctl -p
+   ```
+
+4. **Configure Services:**
+   Start a service (e.g., Apache HTTP Server):
+   ```bash
+   sudo systemctl start httpd
+   sudo systemctl stop httpd
+   ```
+
+5. **Display the List of Services that are Running:**
+   ```bash
+   sudo systemctl list-units --type=service --state=running
+   ```
+
+6. **Stop and Turn OFF Auto-Start Setting for a Service if You Don’t Need It:**
+   ```bash
+   sudo systemctl stop httpd
+   sudo systemctl disable httpd
+   ```
+
+7. **Sudo Settings:**
+   ```bash
+   sudo nano /etc/sudoers
+   zoro ALL=(ALL:ALL) ALL
+   ```
+
+
+
+
+
+
+
+
+
+# Practical 0?
+# Aim: Testing basic commands: 
+
+```
+ifconfig
+vim /vi
+hostname
+chmod 
+mkdir
+ls 
+ls -a
+cat
 ```
 
-You can copy and paste this content into a `README.md` file in your GitHub repository to provide instructions on configuring SSH server for password authentication on RHEL 6.
+# Practical 04
+# Aim: SSH Server
+
+```
+sudo yum install openssh-server
+sudo service sshd start
+sudo chkconfig sshd on
+sudo vi /etc/ssh/sshd_config
+PasswordAuthentication yes
+sudo service sshd restart
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo service iptables save
+ssh john@localhost
+```
+
+# Practical 05
+# Aim: Vsftpd and FTP 
+```
+Goto packages in RHEL disc (Most IMPORTANT)
+#rpm –qa | grep vsftpd
+#rpm – ivh vsftpd*
+#rpm –ivh ftp*
+#rpm –qa | grep ftp 
+#rpm –qa | grep vsftpd
+# chkconfig vsftpd on
+# cd /var/ftp/pub/ 
+#cat > ftpfile
+#ifcofig 
+#vi /etc/vsftpd/vsftpd.conf
+Uncomment anonymous _enable = YES 
+Uncomment local_enable = YES 
+Uncomment anonymous_upload_enable = YES 
+Uncomment listen = YES
+#service vsftpd restart
+ftp 192.168.1.
+ftp> ls –a 
+```
+
+
+
+# Practical 07
+# Aim: DHCP
+
+```
+#rpm –qa dhcp 
+#cd /media/RHEL/Package
+#rpm –ivh dhcp* 
+#rpm –qa | grep dhcp
+#hostname
+#setup
+//Then a dialog box will open up:
+-> setup
+-> network configuration
+-> device configuration
+-> eth0
+-> Enter ip address, mask, remove *
+-> ip:192.168.1.3, msk:255.255.255.0
+-> save and quit 
+#ifdown eth0
+#ifup eth0
+#vi /etc/dhcp/dhcpd.conf
+#cp /usr/share/doc/dhcp/dhcpd.conf.sample /etc/dhcp/dhcpd.conf
+y
+#vi /etc/dhcp/dhcpd.conf
+:se nu (for showing number line)
+Uncomment line no. 18 # authoritative 
+Comment Line No 27 and 28 
+Also make changes to Line 32
+-> Subnet 198.168.1.0 netmask 255.255.255.0 
+      {
+      Range 192.168.1.10 192.168.1.20; 
+      routersrtr-239-0-1.example.org,rtr-239-0-2.example.org 
+       }
+:wq
+#service dhcpd start
+#service dhcpd restart
+#chkconfig dhcp on
+#chkconfig –list dhcp
+#service iptables stop
+#setenforce 0
+```
+
+
+# Practical 0?
+# Aim: Shell Script
+
+```
+1] Reverse of a number 
+
+echo Accept no.
+read num 
+rev=0
+rem=0
+if [ $num -le 0 ]
+then 
+echo Invalid number 
+exit 
+fi
+while [ $num -ne 0 ]
+do 
+    rem=`expr $num % 10`
+    rev=`expr $rem + $rev \*  10`
+    num=`expr $num \/ 10`
+
+echo num = $num
+echo rev = $rev 
+done 
+echo reverse number is $rev 
+
+
+
+
+2] Decimal to Binary 
+
+ echo "Accept number:"
+read deci 
+bin =0
+p=1
+rem=0
+while [ $deci -gt 0 ]
+do 
+   rem=`expr $deci % 2`
+   bin=`expr $bin + $rem \* $p`
+   p=`expr $p \* 10`
+   deci=`expr $deci \/ 2`
+done
+echo "binary number is: $bin"
+
+
+3] Binary to Decimal 
+
+ echo "Accept number:"
+read deci 
+bin =0
+p=1
+rem=0
+while [ $deci -gt 0 ]
+do 
+   rem=`expr $deci % 10`
+   bin=`expr $bin + $rem \* $p`
+   p=`expr $p \* 2`
+   deci=`expr $deci \/ 10`
+done
+echo "Decimal number is: $bin"
+
+
+4] Decimal to Octal 
+
+ echo "Accept number:"
+read deci 
+if [ $deci -lt 1 ]
+then 
+         echo Invalid number 
+         exit 
+fi 
+bin=0
+p=1
+rem=0
+while [ $deci -gt 0 ]
+do 
+     rem=`expr $deci % 10`
+     bin=`expr $bin + $rem \* $p`
+     p=`expr $p \* 8`
+     deci=`expr $deci \/ 10`
+done 
+echo "Octal number is $bin"
+
+
+
+5] Octal to decimal 
+
+ echo "Accept number:"
+read deci 
+if [ $deci -lt 1 ]
+then 
+         echo Invalid number 
+         exit 
+fi 
+bin=0
+p=1
+rem=0
+while [ $deci -gt 0 ]
+do 
+     rem=`expr $deci % 8`
+     bin=`expr $bin + $rem \* $p`
+     p=`expr $p \* 10`
+     deci=`expr $deci \/ 8`
+done 
+echo "Decimal  number is $bin"
+```
+
+# Practical 10
+# Aim: Install and configure NFS server.
+
+```
+#rpm -qa|grep nfs 
+#cd /media/RHEL/disc/packages  (not actual path)
+#rpm -ivh nfs*
+#ifconfig
+#su root
+#cd /home 
+#mkdir servernfs
+#cd servernfs
+#vi tanish 
+#cat > tanish 
+#vi /etc/exports
+//In this file make following changes:
+home/servernfs * (rw, sync)
+#servernfs restart
+#service iptables stop
+#showmount -e 192.168.1.3
+#service vsftpd stop
+#service vsftpd status
+#chmod -R 777 /home/servernfs/
+#cd /home/
+#ls
+#mkdir clientnfs
+#mount -t nfs 192.168.1.3:/homeservernfs/ /home/clientnfs/
+#cd clientnfs/
+#ls
+```
+
+
