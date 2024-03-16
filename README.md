@@ -145,6 +145,7 @@ PasswordAuthentication yes
 sudo service sshd restart
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo service iptables save
+sudo service iptables stop
 ssh john@localhost
 ```
 
@@ -193,7 +194,6 @@ service vsftpd start
 #chkconfig vsftpd on
 #chkconfig –list | grep vsftpd
 #vi /etc/vsftpd/vsftpd.conf
-
 i) Go to directive anonymous _enable = YES and make it anonymous
 _enable = NO.
 ii) Go to directive anonymous_upload_enable = YES and make it
@@ -219,14 +219,7 @@ service vsftpd restart
 hi... this file is created by T2.
 #ftp 192.168.1.1
 ftp> get test.txt
-
-
-
-
-
 ```
-
-
 
 # Practical 07
 # Aim: DHCP
