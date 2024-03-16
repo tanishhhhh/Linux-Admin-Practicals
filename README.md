@@ -89,6 +89,8 @@
 5. **Display the List of Services that are Running:**
    ```bash
    sudo systemctl list-units --type=service --state=running
+   OR
+   sudo chkconfig --list
    ```
 
 6. **Stop and Turn OFF Auto-Start Setting for a Service if You Don’t Need It:**
