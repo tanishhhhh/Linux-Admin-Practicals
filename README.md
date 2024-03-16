@@ -151,6 +151,7 @@ ssh john@localhost
 # Practical 05
 # Aim: Vsftpd and FTP 
 ```
+//Installation
 Goto packages in RHEL disc (Most IMPORTANT)
 #rpm –qa | grep vsftpd
 #rpm – ivh vsftpd*
@@ -172,6 +173,56 @@ username: anonymous
 password: blank (not a word)
 ftp> ls –a
 bye
+
+//Configuration
+#getsebool –a | grep ftp
+#setsebool –P allow_ftp_annon_write on or = 1
+#getsebool –a | grep ftp
+#getsebool –a | grep ftp
+#setsebool –P ftp_home_dir on
+#getsebool –a | grep ftp
+#ls –ldZ /var/ftp/pub
+#chgrp ftp /var/ftp/pub
+#chown ftp /var/ftp/pub
+#ls –ldz /var/ftp/pub
+#cd /var/ftp/pub
+#touch T1 T2 T3
+#cat > ftptest
+service vsftpd start
+#service vsftpd restart
+#chkconfig vsftpd on
+#chkconfig –list | grep vsftpd
+#vi /etc/vsftpd/vsftpd.conf
+
+i) Go to directive anonymous _enable = YES and make it anonymous
+_enable = NO.
+ii) Go to directive anonymous_upload_enable = YES and make it
+anonymous_upload_enable = NO.
+#service vsftpd restart
+#ftp 192.168.1.3
+#useradd T1
+#passwd T1
+#useradd T2
+#passwd T2
+ftp>pwd
+ftp>ls
+ftp>bye
+#service vsftpd restart.
+#vi /etc/vsftpd/user_list
+add T1
+service vsftpd restart
+#cd /home
+#pwd
+#cd T2
+#pwd
+#cat > test.txt
+hi... this file is created by T2.
+#ftp 192.168.1.1
+ftp> get test.txt
+
+
+
+
 
 ```
 
@@ -226,82 +277,96 @@ Also make changes to Line 32
 ```
 1] Reverse of a number 
 
-echo Accept no.
+echo "Enter a number:"
 read num 
+
 rev=0
 rem=0
+
 if [ $num -le 0 ]
 then 
-echo Invalid number 
-exit 
+    echo "Invalid number" 
+    exit 
 fi
+
 while [ $num -ne 0 ]
 do 
-    rem=`expr $num % 10`
-    rev=`expr $rem + $rev \*  10`
-    num=`expr $num \/ 10`
-
-echo num = $num
-echo rev = $rev 
+    rem=$((num % 10))
+    rev=$((rem + rev * 10))
+    num=$((num / 10))
+    echo "num = $num"
+    echo "rev = $rev"
 done 
-echo reverse number is $rev 
+
+echo "Reverse number is $rev"
+ 
 
 
 
 
 2] Decimal to Binary 
 
- echo "Accept number:"
+echo "Accept number:"
 read deci 
-bin =0
+
+bin=0
 p=1
 rem=0
+
 while [ $deci -gt 0 ]
 do 
-   rem=`expr $deci % 2`
-   bin=`expr $bin + $rem \* $p`
-   p=`expr $p \* 10`
-   deci=`expr $deci \/ 2`
+   rem=$((deci % 2))
+   bin=$((bin + rem * p))
+   p=$((p * 10))
+   deci=$((deci / 2))
 done
-echo "binary number is: $bin"
+
+echo "Binary number is: $bin"
 
 
 3] Binary to Decimal 
 
- echo "Accept number:"
+echo "Accept number:"
 read deci 
-bin =0
+
+bin=0
 p=1
 rem=0
+
 while [ $deci -gt 0 ]
 do 
-   rem=`expr $deci % 10`
-   bin=`expr $bin + $rem \* $p`
-   p=`expr $p \* 2`
-   deci=`expr $deci \/ 10`
+   rem=$((deci % 10))
+   bin=$((bin + rem * p))
+   p=$((p * 2))
+   deci=$((deci / 10))
 done
+
 echo "Decimal number is: $bin"
 
 
 4] Decimal to Octal 
 
- echo "Accept number:"
+echo "Accept number:"
 read deci 
+
 if [ $deci -lt 1 ]
 then 
-         echo Invalid number 
-         exit 
+    echo "Invalid number" 
+    exit 
 fi 
+
 bin=0
 p=1
 rem=0
+
 while [ $deci -gt 0 ]
 do 
-     rem=`expr $deci % 10`
-     bin=`expr $bin + $rem \* $p`
-     p=`expr $p \* 8`
-     deci=`expr $deci \/ 10`
+    rem=$((deci % 8))
+    bin=$((bin + rem * p))
+    p=$((p * 10))
+    deci=$((deci / 8))
 done 
+
 echo "Octal number is $bin"
 
 
