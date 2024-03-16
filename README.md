@@ -160,15 +160,19 @@ Goto packages in RHEL disc (Most IMPORTANT)
 # chkconfig vsftpd on
 # cd /var/ftp/pub/ 
 #cat > ftpfile
-#ifcofig 
+#ifconfig 
 #vi /etc/vsftpd/vsftpd.conf
-Uncomment anonymous _enable = YES 
-Uncomment local_enable = YES 
-Uncomment anonymous_upload_enable = YES 
-Uncomment listen = YES
+Uncomment anonymous _enable = YES (line 12)
+Uncomment local_enable = YES  (line 15)
+Uncomment anonymous_upload_enable = YES  (line 27) 
+Uncomment listen = YES (line 109)
 #service vsftpd restart
-ftp 192.168.1.
-ftp> ls –a 
+ftp 192.168.1.3
+username: anonymous
+password: blank (not a word)
+ftp> ls –a
+bye
+
 ```
 
 
