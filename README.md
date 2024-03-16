@@ -82,8 +82,8 @@
 4. **Configure Services:**
    Start a service (e.g., Apache HTTP Server):
    ```bash
-   sudo systemctl start httpd
-   sudo systemctl stop httpd
+  service httpd start
+  service httpd stop
    ```
 
 5. **Display the List of Services that are Running:**
@@ -97,6 +97,12 @@
    ```bash
    sudo systemctl stop httpd
    sudo systemctl disable httpd
+
+   OR
+
+   service http stop
+   sudo chkconfig httpd off
+
    ```
 
 7. **Sudo Settings:**
