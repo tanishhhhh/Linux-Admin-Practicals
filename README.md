@@ -81,10 +81,10 @@
 
 4. **Configure Services:**
    Start a service (e.g., Apache HTTP Server):
-   ```bash
-  service httpd start
+```
+ service httpd start
   service httpd stop
-   ```
+```
 
 5. **Display the List of Services that are Running:**
    ```bash
