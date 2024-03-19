@@ -498,6 +498,7 @@ home/servernfs * (rw, sync)
 ```
 
 # Practical 07 Apache 
+```
 1. su - root 
 2. ifconfig (To get IP Address)
 3. yum list all 
