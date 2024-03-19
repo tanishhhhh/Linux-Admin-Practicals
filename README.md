@@ -147,6 +147,53 @@ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo service iptables save
 sudo service iptables stop
 ssh john@localhost
+//Configuration
+useradd  user1
+passwd user1
+useradd user2
+passwd user2
+ssh user1@192.168.1.3
+pwd
+whoami
+exit
+//configuration
+vi /etc/ssh/sshd_config
+ Add the following lines at the end:
+PermitRootLogin no
+DenyUsers user1
+service sshd restart
+ssh user1@192.168.1.3
+ssh root@192.168.1.3
+ssh user2@ipaddress
+exit
+vi /etc/ssh/sshd_config
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+service sshd restart
+ssh user2@192.168.1.3
+mkdir ~/.ssh
+chmod 755 ~/.ssh
+exit
+ssh-keygen -t rsa
+i love linux
+cat ~/.ssh/id_rsa.pub >> authorized_keys
+scp authorized_keys user2@192.168.1.3:/home/user2/.ssh/
+exit
+su user2
+chmod 644 ~/.ssh/authorized_keys
+service sshd restart
+ssh user2@192.168.1.3
+ssh -l user2 192.168.1.3
+exit
+su - root
+vi /etc/ssh/sshd_config
+Port 22 uncomment
+service sshd restart
+ssh -l user2 192.168.1.3
+ssh -l user2 192.168.1.3 -p 2223
+
+
 ```
 
 # Practical 05
@@ -261,6 +308,17 @@ Also make changes to Line 32
 #chkconfig –list dhcp
 #service iptables stop
 #setenforce 0
+//Configuration
+create a clone
+Right click on Network icon at right top corner on desktop- Edit Connection 
+Select system eth0
+Click on Edit button - select IPv4 setting option  see the method manual
+Change it to DHCP (Automatically)
+# ifconfig
+#vi /etc/sysconfig/network-scripts/ifcfg-eth0
+Change BOOTPROTO = dhcp
+Save the file.
+#service network restart
 ```
 
 
@@ -339,28 +397,23 @@ echo "Decimal number is: $bin"
 
 4] Decimal to Octal 
 
-echo "Accept number:"
-read deci 
-
+echo Accept number :
+read deci
 if [ $deci -lt 1 ]
-then 
-    echo "Invalid number" 
-    exit 
-fi 
-
-bin=0
-p=1
+then
+echo invalid number
+exit
+fi
+oct=""
 rem=0
-
 while [ $deci -gt 0 ]
-do 
-    rem=$((deci % 8))
-    bin=$((bin + rem * p))
-    p=$((p * 10))
-    deci=$((deci / 8))
-done 
+do
+rem=$((deci % 8))
+oct="$rem$oct"
+deci=$((deci / 8))
+done
+echo Octal number is $oct
 
-echo "Octal number is $bin"
 
 
 
@@ -384,6 +437,33 @@ do
      deci=`expr $deci \/ 8`
 done 
 echo "Decimal  number is $bin"
+
+6] Convert lowercase to uppercase
+   if [ $* -le 2 ]
+then
+echo insufficient arguments
+fi
+if [ ! -f $1 ]
+then
+echo File name does not exist
+fi
+echo Converting lowercase to uppercase
+cat $1 | tr '[a-z]' '[A-Z]'
+
+7] Convert uppercase to lowercase
+Code :
+if [ $* -le 2 ]
+then
+echo insufficient arguments
+fi
+if [ ! -f $1 ]
+then
+echo File name does not exist
+fi
+echo Converting lowercase to uppercase
+cat $1 | tr '[A-Z]' '[a-z]'
+
+
 ```
 
 # Practical 10
@@ -417,4 +497,41 @@ home/servernfs * (rw, sync)
 #ls
 ```
 
-
+# Practical 07 Apache 
+1. su - root 
+2. ifconfig (To get IP Address)
+3. yum list all 
+4. yum install httpd* (Press Y if asked for confirmation)
+5. vi /etc/httpd/conf/httpd.conf 
+6. In the end of the file write the following code:
+<VirtualHost *:80>
+ServerAdmin localhost
+DocumentRoot /var/www/html
+DirectoryIndex linuxman.html
+</VirtualHost>
+7. Save the file.
+8. cd /var/www/html (Go to this directory)
+9. httpd -t (Check if any errors in configuration file)
+10. vi linuxman.html (Create this file in the current directory i.e /var/www/html/ )
+11. Enter some text in linuxman.html and save the file.
+12. Now open FireFox and enter your ip address . A page will appear with the content you wrote in linuxman.html. If it fails and shows the error "Can't Reach or connection error" then run the following commands:
+ service httpd status (check if the service is running) if not then enter following commands:
+ service httpd start
+service httpd restart 
+The above commands must return 'OK'.
+13. Now in the same directory (var/www/html/) enter the following command:
+14. mkdir share (to create a new directory)
+15. vi /etc/httpd/conf/httpd.conf (Edit the file again.)
+16. At the end of the file add the following code:
+<Directory "/var/www/html/share">
+Options Indexes
+Order Allow,Deny
+Allow from all
+</Directory>
+17. Save the file.
+18. httpd -t (Check for errors in the configuration)
+19. service httpd restart (To restart the service)
+20. touch 1.csv 2.html df.flv lm lk.xml (This will create dummy files)
+21. Again go to FireFox then enter your_ip_address/share/ 
+22. A new page will appear with Index of/share name.
+```
